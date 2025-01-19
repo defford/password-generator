@@ -43,12 +43,12 @@ const passwordGenerator = (length, string) => {
 if (args.length === 0) {
   string = lowercase;
 } else if (args.length === 1) {
-  string = lowercase;
-
+  // Checks if first argument is a number (used for length)
   if (!isNaN(parseInt(args[0].slice(2)))) {
     length = parseInt(args[0].slice(2));
   }
 
+  // Easy flags
   switch (args[0]) {
     case "--help":
       console.error(helpMessage);
@@ -56,62 +56,62 @@ if (args.length === 0) {
     case "--a":
       string = lowercase + uppercase + numbers + specialCharacters;
       break;
-    case args[0].includes(validOptions):
-        console.log("includes validOptions");
-        for (let char of args[0]) {
-            if (validOptions.includes(char)) {
-                switch (char) {
-                    case "l":
-                        string += lowercase;
-                        break;
-                    case "u":
-                        string += uppercase;
-                        break;
-                    case "n":
-                        string += numbers;
-                        break;
-                    case "s":
-                        string += specialCharacters
-                        break;
-                    default:
-                        break;
+  }
 
-            }
-            }
-        }
+  // Tricky way to check if any of the characters in the flag match any of the valid options
+  if (validOptions.some((option) => args[0].slice(2).includes(option))) {
+    for (let char of args[0]) {
+      switch (char) {
+        case "l":
+          string += lowercase;
+          break;
+        case "u":
+          string += uppercase;
+          break;
+        case "n":
+          string += numbers;
+          break;
+        case "s":
+          string += specialCharacters;
+          break;
+        default:
+      }
+    }
   }
 }
+// Had to set up separate logic in case 2 flags were used
+else if (args.length === 2) {
+  // Checks if first argument is a number (used for length)
+  if (!isNaN(parseInt(args[0].slice(2)))) {
+    length = parseInt(args[0].slice(2));
+  } else {
+    console.error(helpMessage);
+    process.exit(1);
+  }
 
-//   if (args.includes("--a")) {
-//     string += lowercase + uppercase + numbers + specialCharacters;
-//   } else {
-//     const validOptions = ["l", "u", "n", "s"];
-//     for (i = 0; i < args.length; i++) {
+  if (args[1] === "--a") {
+    string = lowercase + uppercase + numbers + specialCharacters;
+  }
 
-//       const option = args[i];
-//       if (isNaN(parseInt(option.slice(2)))) {
-
-//         for (let char of option) {
-
-//           // Print help message if the flags contain non-valid options
-//           if (!validOptions.includes(char)) {
-//             console.error(helpMessage);
-//             process.exit(1);
-//           }
-
-//           if (option.includes("l")) string += lowercase;
-//           if (option.includes("u")) string += uppercase;
-//           if (option.includes("n")) string += numbers;
-//           if (option.includes("s")) string += specialCharacters;
-
-//         }
-//       } else {
-
-//         length = parseInt(option.slice(2));
-
-//       }
-//     }
-//   }
-// }
+  if (validOptions.some((option) => args[1].slice(2).includes(option))) {
+    for (let char of args[1]) {
+      switch (char) {
+        case "l":
+          string += lowercase;
+          break;
+        case "u":
+          string += uppercase;
+          break;
+        case "n":
+          string += numbers;
+          break;
+        case "s":
+          string += specialCharacters;
+          break;
+        default:
+      }
+    }
+  }
+}
 
 passwordGenerator(length, string);
